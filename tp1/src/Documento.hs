@@ -29,7 +29,12 @@ texto [] = Vacio
 texto t = Texto t Vacio
 
 -- foldDoc :: ... PENDIENTE: Ejercicio 1 ...
-foldDoc = error "PENDIENTE: Ejercicio 1"
+foldDoc :: b -> (String -> b -> b)  -> (Int -> b -> b) -> b
+foldDoc cVacio cTexto cLinea d = case d of
+                                    Vacio => cVacio,
+                                    Texto s doc => cTexto s (rec doc)
+                                    Linea ind doc => cLinea ind (rec doc)
+                                  where rec = foldDoc cVacio cTexto cLinea
 
 -- NOTA: Se declara `infixr 6 <+>` para que `d1 <+> d2 <+> d3` sea equivalente a `d1 <+> (d2 <+> d3)`
 -- También permite que expresiones como `texto "a" <+> linea <+> texto "c"` sean válidas sin la necesidad de usar paréntesis.
