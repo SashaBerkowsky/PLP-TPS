@@ -30,6 +30,40 @@ Previo a la resolución definimos 3 lemas:
 Vamos a estar demostrando estos 3 lemas en un apéndice al final del ejercicio
 
 ## Resolución
+Aplicamos inducción estructural en x
+Definimos la propiedad p de la siguiente manera:
+
+P(x) \equiv indentar n (indentar m x) = indentar (m+n) x    m, n :: Int >= 0. x :: Doc
+
+Por el principio de inducción estructural sobre documentos, para ver que P(d) vale para todo d :: Doc basta con ver que vale:
+- P(Vacio)    Caso Base
+- para todo d :: Doc. s :: String. P(d) => P(Texto s d)     Paso Inductivo A
+    - P(d)          Hipotesis Inductiva A
+    - P(Texto s d)  Tesis Inductiva A
+- para todo d :: Doc. i :: Int.    P(d) => P(Linea i d)     Paso Inductivo B
+    - P(d)          Hipotesis Inductiva B
+    - P(Linea i d)  Tesis Inductiva B
+
+### Caso Base 
+
+P(Vacio)  \equiv  indentar n (indentar m Vacio) = indentar (n+m) Vacio
+          \equiv  indentar n Vacio = indentar (n+m) Vacio                 {L1}
+(*)       \equiv  Vacio = indentar (n+m) Vacio                            {L1}
+          \equiv  Vacio = Vacio                                           {L1}
+
+Observación (*): como L1 vale para todo k :: Int >= 0 entonces e una generalización frente al caso particular de n+m
+Queda demostrado el caso base P(Vacio) por definición
+
+### Paso Inductivo A
+
+P(Texto s d)  \equiv  indentar n (indentar m (Texto s d)) = indentar (n+m) (Texto s d)
+
+Partimos desde el lado izquierdo de la ecuación:
+        indentar n (indentar m (Texto s d))
+\equiv  
+
+### Paso Inductivo B
+Con lo cual queda demostrado por inducción estructural que vale P(d) para todo d :: Doc
 
 ## Apéndice
 Sección complementaria: 
@@ -40,7 +74,7 @@ f :: String -> Doc -> Doc
 f = \s d -> Texto s d			{F}
 	
 g :: Int ->  Int -> Doc -> Doc
-g = (\k i d -> Linea (k + i) d)		{G}
+g = \k i d -> Linea (k + i) d		{G}
 
 #### Lema 1 (L1)
 	indentar k Vacio
