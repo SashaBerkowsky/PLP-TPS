@@ -36,13 +36,13 @@ Definimos la propiedad p de la siguiente manera:
 P(x) \equiv indentar n (indentar m x) = indentar (m+n) x    m, n :: Int >= 0. x :: Doc
 
 Por el principio de inducción estructural sobre documentos, para ver que P(d) vale para todo d :: Doc basta con ver que vale:
-- P(Vacio)    Caso Base
-- para todo d :: Doc. s :: String. P(d) => P(Texto s d)     Paso Inductivo A
-    - P(d)          Hipotesis Inductiva A
-    - P(Texto s d)  Tesis Inductiva A
-- para todo d :: Doc. i :: Int.    P(d) => P(Linea i d)     Paso Inductivo B
-    - P(d)          Hipotesis Inductiva B
-    - P(Linea i d)  Tesis Inductiva B
+- P(Vacio)                                                  Caso Base
+- para todo d :: Doc. para todo s :: String. P(d) => P(Texto s d)     Paso Inductivo A
+    - P(d)                Hipotesis Inductiva A
+    - P(Texto s d)        Tesis Inductiva A
+- para todo d :: Doc. para todo i :: Int.    P(d) => P(Linea i d)     Paso Inductivo B
+    - P(d)                Hipotesis Inductiva B
+    - P(Linea i d)        Tesis Inductiva B
 
 ### Caso Base 
 
@@ -59,11 +59,29 @@ Queda demostrado el caso base P(Vacio) por definición
 P(Texto s d)  \equiv  indentar n (indentar m (Texto s d)) = indentar (n+m) (Texto s d)
 
 Partimos desde el lado izquierdo de la ecuación:
+
         indentar n (indentar m (Texto s d))
-\equiv  
+\equiv  indentar n (foldDoc Vacio f (g m))          {I}
+\equiv  indentar n (f s (rec d))                    {FT}
+\equiv  indentar n (f s (foldDoc Vacio f (g m) d))  {FREC}
+\equiv  indentar n (f s (indentar m d))             {I}
+\equiv  indentar n (Texto s (indentar m d))         {F}
+\equiv  Texto s (indentar n (indentar m d))         {L2}
+\equiv  Texto s (indentar (n+m) d)                  {HI}
+\equiv  indentar (n+m) (Texto s d)                  {L2}
+
+Queda demostrado el paso inductivo A P(d) => P(Texto s d) para todo s :: String. para todo d :: Doc
 
 ### Paso Inductivo B
-Con lo cual queda demostrado por inducción estructural que vale P(d) para todo d :: Doc
+
+P(Linea i d)  \equiv  indentar n (indentar m (Linea i d)) = indentar (n+m) (Linea i d)
+
+Partimos desde el lado izquierdo de la ecuación:
+
+        indentar n (indentar m (Linea i d))
+
+### Conclusión
+De esta forma cual queda demostrado por inducción estructural que vale P(d) para todo d :: Doc
 
 ## Apéndice
 Sección complementaria: 
