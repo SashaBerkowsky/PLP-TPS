@@ -19,7 +19,19 @@ foldDoc cVacio cTexto cLinea d = case d of
                                   rec = foldDoc cVacio cTexto cLinea              {FREC}
 
 indentar :: Int -> Doc -> Doc
-indentar i = foldDoc Vacio (\s d -> Texto s d) (\ind d -> Linea (ind + i) d)      {I}
+indentar i = foldDoc Vacio (\s d -> Texto s d) (\ind d -> Linea (ind + i) d)      {I'}
+
+Para facilitar la notación vamos a definir las siguientes funciones auxiliares:
+f :: String -> Doc -> Doc
+f = \s d -> Texto s d			{F}
+	
+g :: Int ->  Int -> Doc -> Doc
+g = \k i d -> Linea (k + i) d		{G}
+
+De esta manera podemos reformular la función indentar:
+
+indentar :: Int -> Doc -> Doc
+indentar i = foldDoc Vacio f (g i)      {I}
 
 ### Lemas
 Previo a la resolución definimos 3 lemas:
@@ -97,12 +109,7 @@ Habiendo demostrado el caso base y los pasos inductivos A y B, queda demostrado 
 Sección complementaria: 
 
 ### Demostraciones de lemas
-Para facilitar la notación vamos a definir las siguientes funciones auxiliares:
-f :: String -> Doc -> Doc
-f = \s d -> Texto s d			{F}
-	
-g :: Int ->  Int -> Doc -> Doc
-g = \k i d -> Linea (k + i) d		{G}
+Demostramos los lemas utilizados para la resolución del ejercicio 10
 
 #### Lema 1 (L1)
 	indentar k Vacio
