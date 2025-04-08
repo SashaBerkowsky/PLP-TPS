@@ -79,9 +79,19 @@ P(Linea i d)  \equiv  indentar n (indentar m (Linea i d)) = indentar (n+m) (Line
 Partimos desde el lado izquierdo de la ecuación:
 
         indentar n (indentar m (Linea i d))
+\equiv  indentar n (foldDoc Vacio f (g m) (Linea i d))  {I}
+\equiv  indentar n (g m i (rec d))                      {FL}
+\equiv  indentar n (g m i (foldDoc Vacio f (g m) d))    {FREC}
+\equiv  indentar n (g m i (indentar m d))               {I}
+\equiv  indentar n (Linea (m + i) (indentar m d))       {G}
+\equiv  Linea (n+m+i) (indentar (n+m) d)                {L3}
+\equiv  Linea ((n+m)+i) (indentar (n+m) d)              {HI}
+\equiv  indentar (n+m) (Linea i d)                      {L3}
+
+Queda demostrado el paso inductivo B P(d) => P(Linea i d) para todo i :: Int >= 0. para todo d :: Doc
 
 ### Conclusión
-De esta forma cual queda demostrado por inducción estructural que vale P(d) para todo d :: Doc
+Habiendo demostrado el caso base y los pasos inductivos A y B, queda demostrado por inducción estructural que vale P(d) para todo d :: Doc
 
 ## Apéndice
 Sección complementaria: 
@@ -117,8 +127,9 @@ Demostramos que vale la igualdad por definición
 
 	indentar m (Linea k d)
 \equiv	foldDoc Vacio f (g m) (Linea k d)	{I}
-\equiv	g (m+k) (rec d)				{FL}
-\equiv	g (m+k) (foldDoc Vacio f (g m) d)	{FREC}
-\equiv	g (m+k) (indentar m d)			{I}
+\equiv	g m k (rec d)				              {FL}
+\equiv	g m k (foldDoc Vacio f (g m) d)	  {FREC}
+\equiv	g m k (indentar m d)			        {I}
+\equiv Linea (m+k) (indentar m d)         {G}
 
 Demostramos que vale la igualdad por definición
