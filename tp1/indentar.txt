@@ -134,9 +134,9 @@ Demostramos que vale la igualdad por definición
 
 	indentar m (Linea k d)
 \equiv	foldDoc Vacio f (g m) (Linea k d)	{I}
-\equiv	g m k (rec d)				              {FL}
-\equiv	g m k (foldDoc Vacio f (g m) d)	  {FREC}
-\equiv	g m k (indentar m d)			        {I}
-\equiv Linea (m+k) (indentar m d)         {G}
+\equiv	g m k (rec d)				{FL}
+\equiv	g m k (foldDoc Vacio f (g m) d)	  	{FREC}
+\equiv	g m k (indentar m d)			{I}
+\equiv Linea (m+k) (indentar m d)         	{G}
 
 Demostramos que vale la igualdad por definición
