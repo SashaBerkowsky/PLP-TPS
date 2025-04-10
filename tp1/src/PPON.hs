@@ -49,5 +49,5 @@ pponADoc pp = case pp of
                     IntPP i -> texto (show i)
                     ObjetoPP xs -> if (tieneHijos xs) then (entreLlaves . docs) xs else ((aplanar . entreLlaves) . docs) xs
                     where
-                    tieneHijos xs = any (\x -> case (snd x) of ObjetoPP _ -> True; _ -> False) xs
-                    docs xs = map (\x -> texto "\"" <+> texto (fst x) <+> texto "\": " <+> pponADoc (snd x)) xs
+                      tieneHijos xs = any (\x -> case (snd x) of ObjetoPP _ -> True; _ -> False) xs
+                      docs xs = map (\x -> texto "\"" <+> texto (fst x) <+> texto "\": " <+> pponADoc (snd x)) xs
