@@ -41,8 +41,7 @@ aplanar = foldDoc vacio (\s d -> texto s <+> d) (\i d -> texto " " <+> d)
 
 -- Tipo de recursion: global
 -- En los casos base se devuelve un valor fijo
--- En el caso recursivo se utilizan todos los resultados de las recursiones previas para generar el resultado utilizando map sobre xs
--- (consultar)
+-- En el caso recursivo se genera la solución a partir del resultado de todas las recursiones previas utilizando map sobre xs
 pponADoc :: PPON -> Doc
 pponADoc pp = case pp of
                     TextoPP t -> texto (show t)
