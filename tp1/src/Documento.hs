@@ -28,7 +28,6 @@ texto t | '\n' `elem` t = error "El texto no debe contener saltos de línea"
 texto [] = Vacio
 texto t = Texto t Vacio
 
--- foldDoc :: ... PENDIENTE: Ejercicio 1 ...
 foldDoc :: b -> (String -> b -> b)  -> (Int -> b -> b) -> Doc -> b
 foldDoc cVacio cTexto cLinea d = case d of
                                     Vacio -> cVacio
