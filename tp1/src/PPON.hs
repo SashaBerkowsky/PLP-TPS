@@ -22,7 +22,7 @@ pponObjetoSimple pp = case pp of
                         
 
 intercalar :: Doc -> [Doc] -> Doc
-intercalar s = foldr1 (\x acc -> x <+> s <+> acc) 
+intercalar s = foldr (\x acc -> if acc == vacio then x else x <+> s <+> acc) vacio
 
 entreLlaves :: [Doc] -> Doc
 entreLlaves [] = texto "{ }"
@@ -47,4 +47,4 @@ pponADoc :: PPON -> Doc
 pponADoc pp = case pp of
                     TextoPP t -> texto (show t)
                     IntPP i -> texto (show i)
-                    ObjetoPP xs -> entreLlaves (map (\x -> intercalar (texto ": ") [texto "\"" <+> texto (fst x) <+> texto "\"", pponADoc (snd x)]) xs)
+                    ObjetoPP xs -> entreLlaves (map (\x -> texto "\"" <+> texto (fst x) <+> texto "\": " <+> pponADoc (snd x)) xs)
