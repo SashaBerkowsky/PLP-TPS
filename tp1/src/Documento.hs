@@ -54,6 +54,7 @@ infixr 6 <+>
                                         Vacio -> Linea ind Vacio
                                         Texto s doc -> Linea ind (Texto s doc)
                                         Linea ind' doc -> Linea (ind + ind') doc) d1
+--
 -- Satisface el invariante:
 -- i es mayor a 0 y el documento de entrada para la funcion indentar cumple con el invariante de Doc
 -- Con lo cual toda linea del documento de entrada tiene una indentación >= 0
