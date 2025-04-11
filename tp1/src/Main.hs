@@ -7,16 +7,6 @@ import Test.HUnit
 main :: IO ()
 main = runTestTTAndExit allTests
 
-i1, i2, i3, i4, indDoble :: Doc
-i1 = texto "Sasha Berkowsky"
-i2 = texto "Manuel Poutays"
-i3 = texto "Bruno Gvirtz"
-i4 = texto "Thiago Ghianni"
-indDoble = indentar 2 linea
-
-nombres :: [Doc]
-nombres = [i1, i2, i3, i4]
-
 allTests :: Test
 allTests =
   test
@@ -29,12 +19,26 @@ allTests =
       "Ejercicio 9" ~: testsEj9
     ]
 
+i1, i2, i3, i4, indDoble :: Doc
+i1 = texto "Sasha Berkowsky"
+i2 = texto "Manuel Poutays"
+i3 = texto "Bruno Gvirtz"
+i4 = texto "Thiago Ghianni"
+indDoble = indentar 2 linea
+
+nombres :: [Doc]
+nombres = [i1, i2, i3, i4]
+
+
 testsEj2 :: Test
 testsEj2 =
   test
     [ vacio <+> vacio ~?= vacio,
       texto "a" <+> texto "b" ~?= texto "ab",
-      (texto "a" <+> linea) <+> texto "b" ~?= texto "a" <+> (linea <+> texto "b")
+      (texto "a" <+> linea) <+> texto "b" ~?= texto "a" <+> (linea <+> texto "b"),
+      texto "Integrantes:" <+> linea <+> i1 <+> linea <+> linea <+> i2 <+> linea <+> i3 <+> linea <+> i4 ~=? texto "Integrantes:" <+> (linea <+> (i1 <+> linea <+> linea <+> i2 <+> linea <+> i3 <+> linea <+> i4)),
+      (texto "Hola!" <+> linea) <+> texto "Somos el equipo lambda." ~?= texto "Hola!" <+> linea <+> texto "Somos el equipo lambda.",
+      vacio <+> linea <+> vacio ~=? linea
     ]
 
 testsEj3 :: Test
@@ -54,7 +58,9 @@ testsEj4 =
   test
     [ mostrar vacio ~?= "",
       mostrar linea ~?= "\n",
-      mostrar (indentar 2 (texto "a" <+> linea <+> texto "b")) ~?= "a\n  b"
+      mostrar (indentar 2 (texto "a" <+> linea <+> texto "b")) ~?= "a\n  b",
+      mostrar (texto "Hola!" <+> linea <+> texto "Somos el grupo lambda.") ~?= "Hola!\nSomos el grupo lambda.",
+      mostrar (texto "Hola!" <+> indDoble <+> texto "Somos el grupo lambda.") ~?= "Hola!\n  Somos el grupo lambda."
     ]
 
 pericles, merlina, addams, familias :: PPON
@@ -102,8 +108,8 @@ testsEj8 :: Test
 testsEj8 =
   test
     [ mostrar (aplanar (a <+> linea <+> b <+> linea <+> c)) ~?= "a b c",
-       mostrar (aplanar (i1 <+> linea <+> i2 <+> linea <+> linea <+> i3 <+> linea <+> i4)) ~?= "Sasha Berkowsky Manuel Poutays Bruno Gvirtz Thiago Ghianni",
-       mostrar (aplanar (i1 <+> indDoble <+> i2 <+> indDoble <+> indDoble <+> i3 <+> indDoble <+> i4)) ~?= "Sasha Berkowsky Manuel Poutays Bruno Gvirtz Thiago Ghianni"
+      mostrar (aplanar (i1 <+> linea <+> i2 <+> linea <+> linea <+> i3 <+> linea <+> i4)) ~?= "Sasha Berkowsky Manuel Poutays Bruno Gvirtz Thiago Ghianni",
+      mostrar (aplanar (i1 <+> indDoble <+> i2 <+> indDoble <+> indDoble <+> i3 <+> indDoble <+> i4)) ~?= "Sasha Berkowsky Manuel Poutays Bruno Gvirtz Thiago Ghianni"
     ]
 
 testsEj9 :: Test
