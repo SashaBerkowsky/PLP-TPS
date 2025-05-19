@@ -3,9 +3,6 @@ Mediante el uso de razonamiento ecuacional e inducción estructural vamos a demo
 
 indentar n (indentar m x) = indentar (n+m) x	    para todo n, m :: Int >= 0. para todo x :: Doc
 
-Antes de continuar presentamos la notación "\equiv" que hace referencia al símbolo de equivalencia
-Esta notación va a ser usada en múltiples ocaciones durante el razonamiento con el fin de no confundir la equivalencia con la igualdad (=)
-
 ## Definiciones
 Planteamos algunas definiciones de funciones y lemas de uso necesario en nuestro razonamiento ecuacional
 
@@ -45,7 +42,7 @@ Vamos a estar demostrando estos 3 lemas en un apéndice al final del ejercicio
 Aplicamos inducción estructural en x y definimos el predicado unario p de la siguiente
 manera:
 
-P(x) \equiv indentar n (indentar m x) = indentar (m+n) x; para todo m, n :: Int >= 0. x :: Doc
+P(x) ≡ indentar n (indentar m x) = indentar (m+n) x; para todo m, n :: Int >= 0. x :: Doc
 
 Por el principio de inducción estructural sobre documentos, para ver que P(d) vale para todo d :: Doc basta con ver que vale:
 - P(Vacio)                                                  Caso Base
@@ -58,47 +55,47 @@ Por el principio de inducción estructural sobre documentos, para ver que P(d) v
 
 ### Caso Base 
 
-P(Vacio)  \equiv  indentar n (indentar m Vacio) = indentar (n+m) Vacio
-          \equiv  indentar n Vacio = indentar (n+m) Vacio                 {L1}
-(*)       \equiv  Vacio = indentar (n+m) Vacio                            {L1}
-          \equiv  Vacio = Vacio                                           {L1}
+P(Vacio)  ≡  indentar n (indentar m Vacio) = indentar (n+m) Vacio
+          ≡  indentar n Vacio = indentar (n+m) Vacio                 {L1}
+(*)       ≡  Vacio = indentar (n+m) Vacio                            {L1}
+          ≡  Vacio = Vacio                                           {L1}
 
 Observación (*): como L1 vale para todo k :: Int >= 0 entonces e una generalización frente al caso particular de n+m
 Queda demostrado el caso base P(Vacio) por definición
 
 ### Paso Inductivo A
 
-P(Texto s d)  \equiv  indentar n (indentar m (Texto s d)) = indentar (n+m) (Texto s d)
+P(Texto s d)  ≡  indentar n (indentar m (Texto s d)) = indentar (n+m) (Texto s d)
 
 Partimos desde el lado izquierdo de la ecuación:
 
         indentar n (indentar m (Texto s d))
-\equiv  indentar n (foldDoc Vacio f (g m))          {I}
-\equiv  indentar n (f s (rec d))                    {FT}
-\equiv  indentar n (f s (foldDoc Vacio f (g m) d))  {FREC}
-\equiv  indentar n (f s (indentar m d))             {I}
-\equiv  indentar n (Texto s (indentar m d))         {F}
-\equiv  Texto s (indentar n (indentar m d))         {L2}
-\equiv  Texto s (indentar (n+m) d)                  {HI}
-\equiv  indentar (n+m) (Texto s d)                  {L2}
+≡  indentar n (foldDoc Vacio f (g m) (Texto s d))         {I}
+≡  indentar n (f s (rec d))                               {FT}
+≡  indentar n (f s (foldDoc Vacio f (g m) d))             {FREC}
+≡  indentar n (f s (indentar m d))                        {I}
+≡  indentar n (Texto s (indentar m d))                    {F}
+≡  Texto s (indentar n (indentar m d))                    {L2}
+≡  Texto s (indentar (n+m) d)                             {HI}
+≡  indentar (n+m) (Texto s d)                             {L2}
 
 Queda demostrado el paso inductivo A P(d) => P(Texto s d) para todo s :: String. para todo d :: Doc
 
 ### Paso Inductivo B
 
-P(Linea i d)  \equiv  indentar n (indentar m (Linea i d)) = indentar (n+m) (Linea i d)
+P(Linea i d)  ≡  indentar n (indentar m (Linea i d)) = indentar (n+m) (Linea i d)
 
 Partimos desde el lado izquierdo de la ecuación:
 
         indentar n (indentar m (Linea i d))
-\equiv  indentar n (foldDoc Vacio f (g m) (Linea i d))  {I}
-\equiv  indentar n (g m i (rec d))                      {FL}
-\equiv  indentar n (g m i (foldDoc Vacio f (g m) d))    {FREC}
-\equiv  indentar n (g m i (indentar m d))               {I}
-\equiv  indentar n (Linea (m + i) (indentar m d))       {G}
-\equiv  Linea (n+m+i) (indentar (n+m) d)                {L3}
-\equiv  Linea ((n+m)+i) (indentar (n+m) d)              {HI}
-\equiv  indentar (n+m) (Linea i d)                      {L3}
+≡  indentar n (foldDoc Vacio f (g m) (Linea i d))  {I}
+≡  indentar n (g m i (rec d))                      {FL}
+≡  indentar n (g m i (foldDoc Vacio f (g m) d))    {FREC}
+≡  indentar n (g m i (indentar m d))               {I}
+≡  indentar n (Linea (m + i) (indentar m d))       {G}
+≡  Linea (n+m+i) (indentar (n+m) d)                {L3}
+≡  Linea ((n+m)+i) (indentar (n+m) d)              {HI}
+≡  indentar (n+m) (Linea i d)                      {L3}
 
 Queda demostrado el paso inductivo B P(d) => P(Linea i d) para todo i :: Int >= 0. para todo d :: Doc
 
@@ -117,8 +114,8 @@ Deseamos ver si vale la siguiente igualdad:
 indentar k Vacio = Vacio vale para todo k :: Int >= 0 
 
 	indentar k Vacio
-\equiv	foldDoc Vacio f (g k) Vacio	{I}
-\equiv	Vacio				{FV}
+≡	foldDoc Vacio f (g k) Vacio	{I}
+≡	Vacio				{FV}
 
 Demostramos que vale la igualdad por definición utilizando razonamiento ecuacional
 
@@ -128,11 +125,11 @@ Deseamos ver si vale la siguiente igualdad:
 indentar k (Texto s d) = Texto s (indentar k d) para todo k :: Int >= 0. s :: String. d :: Doc
 
 	indentar k (Texto s d)
-\equiv	foldDoc Vacio f (g k) (Texto s d)	{I}
-\equiv	f s (rec d)				{FT}
-\equiv	f s (foldDoc Vacio f (g k) d)		{FREC}
-\equiv	f s (indentar k d)			{I}
-\equiv	Texto s (indentar k d)			{F}
+≡	foldDoc Vacio f (g k) (Texto s d)	{I}
+≡	f s (rec d)				{FT}
+≡	f s (foldDoc Vacio f (g k) d)		{FREC}
+≡	f s (indentar k d)			{I}
+≡	Texto s (indentar k d)			{F}
 
 Demostramos que vale la igualdad por definición utilizando razonamiento ecuacional
 
@@ -142,10 +139,10 @@ Deseamos ver si vale la siguiente igualdad:
 indentar m (Linea k d) = Linea (m+k) (indentar m d) para todo m, k :: Int >= 0. d :: Doc
 
 	indentar m (Linea k d)
-\equiv	foldDoc Vacio f (g m) (Linea k d)	{I}
-\equiv	g m k (rec d)				{FL}
-\equiv	g m k (foldDoc Vacio f (g m) d)	  	{FREC}
-\equiv	g m k (indentar m d)			{I}
-\equiv Linea (m+k) (indentar m d)         	{G}
+≡	foldDoc Vacio f (g m) (Linea k d)	{I}
+≡	g m k (rec d)				{FL}
+≡	g m k (foldDoc Vacio f (g m) d)	  	{FREC}
+≡	g m k (indentar m d)			{I}
+≡ Linea (m+k) (indentar m d)         	{G}
 
 Demostramos que vale la igualdad por definición utilizando razonamiento ecuacional
