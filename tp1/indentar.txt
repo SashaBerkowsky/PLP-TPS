@@ -46,8 +46,8 @@ indentar i = foldoc Vacio f (g i)     {I}
 
 ### Lemas
 Previo a la resolución definimos 5 lemas:
-  	1. f = (\s d -> Texto s d)                                  {L1}
-  	2. g i = (\ind d -> Linea (ind + i) d) para todo i :: Int   {L2}
+  	1. f = (\s d -> Texto s d)                                  						{L1}
+  	2. g i = (\ind d -> Linea (ind + i) d) para todo i :: Int   						{L2}
 	3. indentar k Vacio = Vacio para todo k :: Int >= 0							{L3}
 	4. indentar k (Texto s d) = Texto s (indentar k d) para todo k :: Int >= 0. s :: String. d :: Doc	{L4}
 	5. indentar m (Linea k d) = Linea (m+k) (indentar m d) para todo m, k :: Int >= 0. d :: Doc		{L5}
