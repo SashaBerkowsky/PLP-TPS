@@ -19,22 +19,38 @@ indentar :: Int -> Doc -> Doc
 indentar i = foldDoc Vacio (\s d -> Texto s d) (\ind d -> Linea (ind + i) d)      {I'}
 
 Para facilitar la notación vamos a definir las siguientes funciones auxiliares:
+
 f :: String -> Doc -> Doc
-f = \s d -> Texto s d			    {F}
+f = \s d -> Texto s d			{F}
 	
 g :: Int ->  Int -> Doc -> Doc
-g = \k i d -> Linea (k + i) d		{G}
+g = \i ind d -> Linea (ind + i) d	{G}
 
-De esta manera podemos reformular la función indentar:
+A continuación en la sección de lemas vamos a demostrar:
+  1. f = (\s d -> Texto s d)                                  {L1}
+  2. g i = (\ind d -> Linea (ind + i) d) para todo i :: Int   {L2}
+
+Esto nos va a permitir reformular la función indentar de la siguiente manera:
 
 indentar :: Int -> Doc -> Doc
-indentar i = foldDoc Vacio f (g i)      {I}
+indentar i = foldDoc Vacio (\s d -> Texto s d) (\ind d -> Linea (ind + i) d)      {I'}
+
+indentar i
+≡ foldDoc Vacio (\s d -> Texto s d) (\ind d -> Linea (ind + i) d)     	{I'}
+≡ foldDoc Vacio f (\ind d -> Linea (ind + i) d)           		{L1}
+≡ indentar i = foldDoc Vacio f (g i)      				{L2}
+
+Con lo cual queda planteado el lema:
+
+indentar i = foldoc Vacio f (g i)     {I}
 
 ### Lemas
-Previo a la resolución definimos 3 lemas:
-	1. indentar k Vacio = Vacio para todo k :: Int >= 0							{L1}
-	2. indentar k (Texto s d) = Texto s (indentar k d) para todo k :: Int >= 0. s :: String. d :: Doc	{L2}
-	3. indentar m (Linea k d) = Linea (m+k) (indentar m d) para todo m, k :: Int >= 0. d :: Doc		{L3}
+Previo a la resolución definimos 5 lemas:
+  1. f = (\s d -> Texto s d)                                  {L1}
+  2. g i = (\ind d -> Linea (ind + i) d) para todo i :: Int   {L2}
+	3. indentar k Vacio = Vacio para todo k :: Int >= 0							{L3}
+	4. indentar k (Texto s d) = Texto s (indentar k d) para todo k :: Int >= 0. s :: String. d :: Doc	{L4}
+	5. indentar m (Linea k d) = Linea (m+k) (indentar m d) para todo m, k :: Int >= 0. d :: Doc		{L5}
 
 Vamos a estar demostrando estos 3 lemas en un apéndice al final del ejercicio
 
@@ -56,11 +72,11 @@ Por el principio de inducción estructural sobre documentos, para ver que P(d) v
 ### Caso Base 
 
 P(Vacio)  ≡  indentar n (indentar m Vacio) = indentar (n+m) Vacio
-          ≡  indentar n Vacio = indentar (n+m) Vacio                 {L1}
-(*)       ≡  Vacio = indentar (n+m) Vacio                            {L1}
-          ≡  Vacio = Vacio                                           {L1}
+          ≡  indentar n Vacio = indentar (n+m) Vacio                 {L3}
+(*)       ≡  Vacio = indentar (n+m) Vacio                            {L3}
+          ≡  Vacio = Vacio                                           {L3}
 
-Observación (*): como L1 vale para todo k :: Int >= 0 entonces e una generalización frente al caso particular de n+m
+Observación (*): como L3 vale para todo k :: Int >= 0 entonces e una generalización frente al caso particular de n+m
 Queda demostrado el caso base P(Vacio) por definición
 
 ### Paso Inductivo A
@@ -75,9 +91,9 @@ Partimos desde el lado izquierdo de la ecuación:
 ≡  indentar n (f s (foldDoc Vacio f (g m) d))             {FREC}
 ≡  indentar n (f s (indentar m d))                        {I}
 ≡  indentar n (Texto s (indentar m d))                    {F}
-≡  Texto s (indentar n (indentar m d))                    {L2}
+≡  Texto s (indentar n (indentar m d))                    {L4}
 ≡  Texto s (indentar (n+m) d)                             {HI}
-≡  indentar (n+m) (Texto s d)                             {L2}
+≡  indentar (n+m) (Texto s d)                             {L4}
 
 Queda demostrado el paso inductivo A P(d) => P(Texto s d) para todo s :: String. para todo d :: Doc
 
@@ -92,10 +108,12 @@ Partimos desde el lado izquierdo de la ecuación:
 ≡  indentar n (g m i (rec d))                      {FL}
 ≡  indentar n (g m i (foldDoc Vacio f (g m) d))    {FREC}
 ≡  indentar n (g m i (indentar m d))               {I}
-≡  indentar n (Linea (m + i) (indentar m d))       {G}
-≡  Linea (n+m+i) (indentar (n+m) d)                {L3}
+≡  indentar n (Linea (i+m) (indentar m d))         {G}
+≡  indentar n (Linea (m+i) (indentar m d))         {INT}
+≡  Linea (n+m+i) (indentar n (indentar m d))       {L5}
+≡  Linea ((n+m)+i) (indentar n (indentar m d))     {INT}
 ≡  Linea ((n+m)+i) (indentar (n+m) d)              {HI}
-≡  indentar (n+m) (Linea i d)                      {L3}
+≡  indentar (n+m) (Linea i d)                      {L5}
 
 Queda demostrado el paso inductivo B P(d) => P(Linea i d) para todo i :: Int >= 0. para todo d :: Doc
 
@@ -109,6 +127,48 @@ Sección complementaria:
 Demostramos los lemas utilizados para la resolución del ejercicio 10
 
 #### Lema 1 (L1)
+Deseamos ver si vale la siguiente igualdad
+
+(\s d -> Texto s d) = f
+
+Por principio de extensionalidad funcional esto solo vale si 
+
+(\s d -> Texto s d) s = f s para todo s::String
+
+Aplicando nuevamente el principio de extensionalidad funcional esto solo vale si
+
+(\s d -> Texto s d) = f s d para todo s::String. para todo d::Doc
+
+Partiendo del lado derecho de la igualdad:
+f s d
+≡	(\s d -> Texto s d)   {F}
+
+#### Lema 2 (L2)
+Deseamos ver si vale la siguiente igualdad
+
+g i = (\ind d -> Linea (ind + i) d) para todo i :: Int   {L2}
+
+Por el principio de extensionalidad funcional esto solo es valido si
+g i ind = (\ind d -> Linea (ind + i) d) ind para todo i, ind :: Int
+
+Por el principio de extensionalidad funcional esto solo es valido si
+g i ind d = (\ind d -> Linea (ind + i) d) ind d para todo i, ind :: Int, d :: Doc
+
+Partiendo del lado izquierdo:
+
+g i ind d
+≡	(\i ind d -> Linea (ind + i) d) i ind d {G}
+≡	(\ind d -> Linea (ind + i) d) ind d 	{BETA}
+≡	(\d -> Linea (ind + i) d) d 		{BETA}
+≡	Linea (ind + i) d 			{BETA}
+
+Partiendo del lado derecho:
+
+(\ind d -> Linea (ind + i) d) ind d
+≡	(\d -> Linea (ind + i) d) d 		{BETA}
+≡	Linea (ind + i) d 			{BETA}
+
+#### Lema 3 (L3)
 Deseamos ver si vale la siguiente igualdad:
 
 indentar k Vacio = Vacio vale para todo k :: Int >= 0 
@@ -119,7 +179,7 @@ indentar k Vacio = Vacio vale para todo k :: Int >= 0
 
 Demostramos que vale la igualdad por definición utilizando razonamiento ecuacional
 
-#### Lema 2 (L2)
+#### Lema 4 (L4)
 Deseamos ver si vale la siguiente igualdad:
 
 indentar k (Texto s d) = Texto s (indentar k d) para todo k :: Int >= 0. s :: String. d :: Doc
@@ -133,7 +193,7 @@ indentar k (Texto s d) = Texto s (indentar k d) para todo k :: Int >= 0. s :: St
 
 Demostramos que vale la igualdad por definición utilizando razonamiento ecuacional
 
-#### Lema 3 (L3)
+#### Lema 5 (L5)
 Deseamos ver si vale la siguiente igualdad:
 
 indentar m (Linea k d) = Linea (m+k) (indentar m d) para todo m, k :: Int >= 0. d :: Doc
@@ -143,6 +203,5 @@ indentar m (Linea k d) = Linea (m+k) (indentar m d) para todo m, k :: Int >= 0. 
 ≡	g m k (rec d)				{FL}
 ≡	g m k (foldDoc Vacio f (g m) d)	  	{FREC}
 ≡	g m k (indentar m d)			{I}
-≡ Linea (m+k) (indentar m d)         	{G}
-
-Demostramos que vale la igualdad por definición utilizando razonamiento ecuacional
+≡ 	Linea (k+m) (indentar m d)         	{G}
+≡ 	Linea (m+k) (indentar m d)         	{INT}
