@@ -84,7 +84,7 @@ testsEj6 =
   test
     [ pponObjetoSimple pericles ~?= True,
       pponObjetoSimple addams ~?= False,
-      pponObjetoSimple nombreGrupo ~?= True,
+      pponObjetoSimple nombreGrupo ~?= False,
       pponObjetoSimple integrantes ~?= False
     ]
 

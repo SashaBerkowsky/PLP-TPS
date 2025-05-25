@@ -16,9 +16,9 @@ pponAtomico pp = case pp of
 
 pponObjetoSimple :: PPON -> Bool
 pponObjetoSimple pp = case pp of
-                      TextoPP _ -> True
-                      IntPP _ -> True
-                      ObjetoPP xs -> foldr (\(_, x) acc -> acc || pponAtomico x) False xs
+                      TextoPP _ -> False
+                      IntPP _ -> False
+                      ObjetoPP xs -> foldr (\(_, x) acc -> acc && pponAtomico x) True xs
                         
 
 intercalar :: Doc -> [Doc] -> Doc
