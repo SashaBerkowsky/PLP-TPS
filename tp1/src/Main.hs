@@ -10,9 +10,11 @@ main = runTestTTAndExit allTests
 allTests :: Test
 allTests =
   test
-    [ "Ejercicio 2" ~: testsEj2,
+    [ "Ejercicio 1" ~: testsEj1,
+      "Ejercicio 2" ~: testsEj2,
       "Ejercicio 3" ~: testsEj3,
       "Ejercicio 4" ~: testsEj4,
+      "Ejercicio 5" ~: testsEj5,
       "Ejercicio 6" ~: testsEj6,
       "Ejercicio 7" ~: testsEj7,
       "Ejercicio 8" ~: testsEj8,
@@ -29,6 +31,14 @@ indDoble = indentar 2 linea
 nombres :: [Doc]
 nombres = [i1, i2, i3, i4]
 
+testsEj1 :: Test
+testsEj1 =
+  test
+    [
+      foldDoc 0 ((+) . length) (flip const) (texto "abc" <+> (linea <+> texto "def")) ~?= 6,
+      foldDoc "" (\s acc -> reverse s ++ acc) (\_ -> (" " ++)) (texto "abc" <+> (linea <+> texto "def")) ~?= "cba fed",
+      foldDoc "" (\s acc -> s ++ acc) (\_ -> ("-" ++)) (texto "abc" <+> (linea <+> texto "def")) ~?= "abc-def"
+    ]
 
 testsEj2 :: Test
 testsEj2 =
@@ -63,12 +73,6 @@ testsEj4 =
       mostrar (texto "Hola!" <+> indDoble <+> texto "Somos el grupo lambda.") ~?= "Hola!\n  Somos el grupo lambda."
     ]
 
-pericles, merlina, addams, familias :: PPON
-pericles = ObjetoPP [("nombre", TextoPP "Pericles"), ("edad", IntPP 30)]
-merlina = ObjetoPP [("nombre", TextoPP "Merlina"), ("edad", IntPP 24)]
-addams = ObjetoPP [("0", pericles), ("1", merlina)]
-familias = ObjetoPP [("Addams", addams)]
-
 grupo, nombreGrupo, numeroIntegrantes, integrante1, integrante2, integrante3, integrante4, integrantes :: PPON
 nombreGrupo = TextoPP "Lambda"
 numeroIntegrantes = IntPP 4
@@ -78,6 +82,20 @@ integrante3  = ObjetoPP [("nombre", TextoPP "Bruno Gvirtz"), ("email", TextoPP "
 integrante4  = ObjetoPP [("nombre", TextoPP "Thiago Ghianni"), ("email", TextoPP "ghiannithiago@gmail.com")]
 integrantes = ObjetoPP [("1158/23", integrante1), ("1256/23", integrante2), ("1173/23", integrante3), ("1182/22", integrante4)]
 grupo = ObjetoPP [("integrantes", integrantes), ("nombre", nombreGrupo), ("cantidad de integrantes", numeroIntegrantes)]
+
+testsEj5 :: Test
+testsEj5 =
+  test
+    [ pponAtomico nombreGrupo ~?= True,
+      pponAtomico numeroIntegrantes ~?= True,
+      pponAtomico grupo ~?= False
+    ]
+
+pericles, merlina, addams, familias :: PPON
+pericles = ObjetoPP [("nombre", TextoPP "Pericles"), ("edad", IntPP 30)]
+merlina = ObjetoPP [("nombre", TextoPP "Merlina"), ("edad", IntPP 24)]
+addams = ObjetoPP [("0", pericles), ("1", merlina)]
+familias = ObjetoPP [("Addams", addams)]
 
 testsEj6 :: Test
 testsEj6 =
