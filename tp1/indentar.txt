@@ -52,7 +52,7 @@ Previo a la resolución definimos 5 lemas:
 	4. indentar k (Texto s d) = Texto s (indentar k d) para todo k :: Int >= 0. s :: String. d :: Doc	{L4}
 	5. indentar m (Linea k d) = Linea (m+k) (indentar m d) para todo m, k :: Int >= 0. d :: Doc		{L5}
 
-Vamos a estar demostrando estos 3 lemas en un apéndice al final del ejercicio
+Vamos a estar demostrando estos 5 lemas en un apéndice al final del ejercicio
 
 ## Resolución
 Aplicamos inducción estructural en x y definimos el predicado unario p de la siguiente
