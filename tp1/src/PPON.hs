@@ -39,14 +39,15 @@ entreLlaves ds =
 aplanar :: Doc -> Doc
 aplanar = foldDoc vacio (\s d -> texto s <+> d) (\i d -> texto " " <+> d)
 
--- Tipo de recursion: global
+-- Tipo de recursion: primitiva
 -- En los casos base se devuelve un valor fijo
--- En el caso recursivo se genera la solución a partir del resultado de todas las recursiones previas utilizando map sobre xs
+-- En el caso recursivo solo utiliza la funcion original (pponADoc) tomando como argumento una versión reducida del argumento original acercándose al caso base
+-- Sin embargo en el caso recursivo la funcion si requiere de revisar la estructura original con lo cual esta instancia de recursión no puede ser determinada como estructural
 pponADoc :: PPON -> Doc
 pponADoc pp = case pp of
                     TextoPP t -> texto (show t)
                     IntPP i -> texto (show i)
-                    ObjetoPP xs -> if (tieneHijos xs) then (entreLlaves . docs) xs else ((aplanar . entreLlaves) . docs) xs
+                    ObjetoPP xs -> if (all (\(_, v) -> pponAtomico v) xs) then ((aplanar . entreLlaves) . (map (\(k, v) -> clave k <+> pponADoc v))) xs 
+                                                                          else (entreLlaves . (map (\(k, v) -> clave k <+> if pponObjetoSimple v then (aplanar. pponADoc) v else pponADoc v))) xs
                     where
-                      tieneHijos xs = any (\x -> case (snd x) of ObjetoPP _ -> True; _ -> False) xs
-                      docs xs = map (\x -> texto "\"" <+> texto (fst x) <+> texto "\": " <+> pponADoc (snd x)) xs
+                      clave = \x -> texto ("\"" ++ x ++ "\": ")
