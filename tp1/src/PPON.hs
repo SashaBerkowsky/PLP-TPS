@@ -22,7 +22,8 @@ pponObjetoSimple pp = case pp of
                         
 
 intercalar :: Doc -> [Doc] -> Doc
-intercalar s = foldr (\x acc -> if acc == vacio then x else x <+> s <+> acc) vacio
+-- intercalar s xs = if null xs then vacio else foldl (\acc x -> if x == vacio then acc else acc <+> s <+> x) (if (head xs) == vacio then s else head xs) (tail xs)
+intercalar s xs = if null xs then vacio else foldl1 (\acc x -> if x == vacio then s else acc <+> s <+> x) xs
 
 entreLlaves :: [Doc] -> Doc
 entreLlaves [] = texto "{ }"
@@ -47,7 +48,8 @@ pponADoc :: PPON -> Doc
 pponADoc pp = case pp of
                     TextoPP t -> texto (show t)
                     IntPP i -> texto (show i)
-                    ObjetoPP xs -> if (all (\(_, v) -> pponAtomico v) xs) then ((aplanar . entreLlaves) . (map (\(k, v) -> clave k <+> pponADoc v))) xs 
-                                                                          else (entreLlaves . (map (\(k, v) -> clave k <+> if pponObjetoSimple v then (aplanar. pponADoc) v else pponADoc v))) xs
-                    where
-                      clave = \x -> texto ("\"" ++ x ++ "\": ")
+                    ObjetoPP xs -> if pponObjetoSimple pp 
+                                    then (aplanar . entreLlaves) (map parClaveValor xs)
+                                    else entreLlaves (map parClaveValor xs)
+                where
+                  parClaveValor = \(clave, valor) -> texto ("\"" ++ clave ++ "\": ") <+> pponADoc valor

@@ -115,6 +115,7 @@ testsEj7 :: Test
 testsEj7 =
   test
     [ mostrar (intercalar (texto ", ") []) ~?= "",
+      mostrar (intercalar (texto ", ") [vacio, vacio]) ~?= ", ",
       mostrar (intercalar (texto ", ") [a, b, c]) ~?= "a, b, c",
       mostrar (intercalar (texto ", ") nombres) ~?= "Sasha Berkowsky, Manuel Poutays, Bruno Gvirtz, Thiago Ghianni",
       mostrar (entreLlaves []) ~?= "{ }",
