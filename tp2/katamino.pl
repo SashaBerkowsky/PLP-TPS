@@ -8,28 +8,31 @@ partir(N, Lista, L1, L2) :-
 
 sublista(D,T,L,R) :- partir(D,L,_,L2), partir(T, L2, R, _).
 
-%2 revisar implementacion
-
+%2 
 tablero(K, T) :-
-tablero1(5, K, T).  
+    K > 0,
+    length(T, 5),
+    maplist(es_fila(K), T).
 
-tablero1(0, _, []).    
-
-tablero1(N, K, [Fila|Resto]) :-
-    N > 0,
-    length(Fila, K),    
-    N1 is N - 1,
-    tablero1(N1, K, Resto).
+es_fila(C, F) :-
+    length(F, C).
+  
 %3
-
-tamaño(M, F, C):- length(M,F), columnas(M,C).
-columnas([],_).
-columnas([X|M],C) :- length(X,C), columnas(M,C).
+tamaño(M, F, C) :-
+    length(M, F),
+    F > 0,
+    nth0(0, M, F1),
+    length(F1, C).
 
 %4
-coordenadas([U|_],IJ) :- length(U,L), between(1,5,I),between(1,L,J), IJ = (I,J).
+coordenadas(T, IJ) :-
+    tamaño(T, X, Y),
+    between(1, X, I),
+    between(1, Y, J),
+    IJ = (I, J).
+
 %5
-kPiezas(K, PS) :- nombrePiezas(L), elegirPiezas(K, L, PS), length(PS,K).
+kPiezas(K, PS) :- nombrePiezas(L), length(PS,K), elegirPiezas(K, L, PS).
 
 elegirPiezas(0, _, []). 
 elegirPiezas(K, [X|L],[X|PS]):- K > 0,K1 is K - 1, elegirPiezas(K1, L, PS).
