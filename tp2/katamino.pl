@@ -50,42 +50,35 @@ seccionTablero(T, ALTO, ANCHO, (I, J), ST) :-
     FC =< CT,
 
     sublista(PF, ALTO, T, FS),
-
     maplist(obtenerCols(PC, ANCHO), FS, ST).
 
 obtenerCols(J, ANCHO, FS, FA) :-
     sublista(J, ANCHO, FS, FA).    
 
 % 7
-ubicarPieza(Tablero, Identificador) :-
-    pieza(Identificador, FormaPieza), 
-    tamaño(FormaPieza, AltoPieza, AnchoPieza),
-    tamaño(Tablero, FilasTablero, ColsTablero),
+ubicarPieza(T, ID) :-
+    pieza(ID, P), 
+    tamaño(P, HP, WP),
+    tamaño(T, FILAS, COLS),
+    between(1, FILAS, I),
+    between(1, COLS, J),
+    seccionTablero(T, HP, WP, (I, J), S),
+    colocarPieza(ID, P, S).
 
-    between(1, FilasTablero, I),
-    between(1, ColsTablero, J),
+colocarPieza(_, [], []). 
+colocarPieza(ID, [FP|RP], [FT|RT]) :-
+    colocarPiezaEnFila(ID, FP, FT),
+    colocarPieza(ID, RP, RT).
 
-    seccionTablero(Tablero, AltoPieza, AnchoPieza, (I, J), SeccionTablero),
+colocarPiezaEnFila(_, [], []). 
+colocarPiezaEnFila(ID, [PU|PR], [TU|TR]) :-
+    colocarUnidadPieza(ID, PU, TU),
+    colocarPiezaEnFila(ID, PR, TR).
 
-    colocar_pieza_en_seccion(Identificador, FormaPieza, SeccionTablero).
-
-colocar_pieza_en_seccion(_, [], []). 
-colocar_pieza_en_seccion(Identificador, [FilaPieza | RestoPieza], [FilaTablero | RestoTablero]) :-
-    colocar_fila_pieza(Identificador, FilaPieza, FilaTablero),
-    colocar_pieza_en_seccion(Identificador, RestoPieza, RestoTablero).
-
-colocar_fila_pieza(_, [], []). 
-colocar_fila_pieza(Identificador, [P_Celda | P_Resto], [T_Celda | T_Resto]) :-
-    (   P_Celda == Identificador
-    ->  
-        var(T_Celda),
-        T_Celda = Identificador
-    ;   var(P_Celda) 
-    ->  
-        true
-    ;   false 
-    ),
-    colocar_fila_pieza(Identificador, P_Resto, T_Resto).
+colocarUnidadPieza(ID, ID, TU) :-
+    var(TU),
+    TU = ID.
+colocarUnidadPieza(_, PU, _) :- var(PU).
 
 % 8
 ubicarPiezas(_, _, []).
@@ -101,40 +94,39 @@ llenarTablero(Poda, C, T) :-
     ubicarPiezas(T, Poda, P).
 
 % 10
-cantSoluciones(Poda, Columnas, N) :-
-    findall(T, llenarTablero(Poda, Columnas, T), TS),
+cantSoluciones(Poda, C, N) :-
+    findall(T, llenarTablero(Poda, C, T), TS),
     length(TS, N).
 
 % 11
 poda(sinPoda, _) :- true.
 poda(podaMod5, T) :- todosGruposLibresModulo5(T).
 
-celda_es_libre(Tablero, Fila, Columna) :-
-    IndiceFila is Fila - 1,
-    nth0(IndiceFila, Tablero, Row),
-    IndiceColumna is Columna - 1,
-    nth0(IndiceColumna, Row, Celda),
-    var(Celda).
+todosGruposLibresModulo5(T) :-
+    coordenadasLibres(T, CL),
+    agruparCoordenadasLibres(CL).
 
-obtener_coordenadas_libres(Tablero, ListaCoordenadas) :-
-    tamaño(Tablero, NumFilas, NumColumnas),
-    findall( (F,C), (
-        between(1, NumFilas, F),
-        between(1, NumColumnas, C),
-        celda_es_libre(Tablero, F, C)
-    ), ListaCoordenadas).
+agruparCoordenadasLibres([]) :- true.
+agruparCoordenadasLibres(CL) :-
+    agrupar(CL, GL),
+    maplist(tamañoEsMod5, GL).
 
-grupo_es_modulo_5(Grupo) :-
-    length(Grupo, TamanoGrupo),
-    TamanoGrupo mod 5 =:= 0.
+tamañoEsMod5(G) :-
+    length(G, TG),
+    TG mod 5 =:= 0.
 
-todosGruposLibresModulo5(Tablero) :-
-    obtener_coordenadas_libres(Tablero, CoordenadasLibres),
-    (   CoordenadasLibres == []
-    ->  true
-    ;   
-        agrupar(CoordenadasLibres, GruposLibres),
-        maplist(grupo_es_modulo_5, GruposLibres)
-    ).
+coordenadasLibres(T, LC) :-
+    tamaño(T, CF, CC),
+    findall((F,C), (
+        between(1, CF, F),
+        between(1, CC, C),
+        esCeldaLibre(T, F, C)
+    ), LC).
 
+esCeldaLibre(T, F, C) :-
+    PF is F - 1,
+    nth0(PF, T, UF),
 
+    PC is C - 1,
+    nth0(PC, UF, U),
+    var(U).
