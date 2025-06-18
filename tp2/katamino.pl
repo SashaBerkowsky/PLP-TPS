@@ -107,4 +107,34 @@ cantSoluciones(Poda, Columnas, N) :-
 
 % 11
 poda(sinPoda, _) :- true.
+poda(podaMod5, T) :- todosGruposLibresModulo5(T).
+
+celda_es_libre(Tablero, Fila, Columna) :-
+    IndiceFila is Fila - 1,
+    nth0(IndiceFila, Tablero, Row),
+    IndiceColumna is Columna - 1,
+    nth0(IndiceColumna, Row, Celda),
+    var(Celda).
+
+obtener_coordenadas_libres(Tablero, ListaCoordenadas) :-
+    tamaño(Tablero, NumFilas, NumColumnas),
+    findall( (F,C), (
+        between(1, NumFilas, F),
+        between(1, NumColumnas, C),
+        celda_es_libre(Tablero, F, C)
+    ), ListaCoordenadas).
+
+grupo_es_modulo_5(Grupo) :-
+    length(Grupo, TamanoGrupo),
+    TamanoGrupo mod 5 =:= 0.
+
+todosGruposLibresModulo5(Tablero) :-
+    obtener_coordenadas_libres(Tablero, CoordenadasLibres),
+    (   CoordenadasLibres == []
+    ->  true
+    ;   
+        agrupar(CoordenadasLibres, GruposLibres),
+        maplist(grupo_es_modulo_5, GruposLibres)
+    ).
+
 
