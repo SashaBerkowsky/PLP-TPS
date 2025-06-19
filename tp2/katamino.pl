@@ -62,8 +62,14 @@ ubicarPieza(T, ID) :-
     tamaño(T, FILAS, COLS),
     between(1, FILAS, I),
     between(1, COLS, J),
+    espacioSuficiente(T, (I, J), HP, WP),
     seccionTablero(T, HP, WP, (I, J), S),
     colocarPieza(ID, P, S).
+
+espacioSuficiente(T, (I, J), HP, WP) :-
+    tamaño(T, FT, CT),
+    I =< FT - HP + 1,
+    J =< CT - WP + 1.
 
 colocarPieza(_, [], []). 
 colocarPieza(ID, [FP|RP], [FT|RT]) :-
@@ -75,9 +81,11 @@ colocarPiezaEnFila(ID, [PU|PR], [TU|TR]) :-
     colocarUnidadPieza(ID, PU, TU),
     colocarPiezaEnFila(ID, PR, TR).
 
-colocarUnidadPieza(ID, ID, TU) :-
+colocarUnidadPieza(ID, PU, TU) :-
+    ID == PU,
     var(TU),
     TU = ID.
+
 colocarUnidadPieza(_, PU, _) :- var(PU).
 
 % 8
@@ -100,33 +108,23 @@ cantSoluciones(Poda, C, N) :-
 
 % 11
 poda(sinPoda, _) :- true.
-poda(podaMod5, T) :- todosGruposLibresModulo5(T).
+poda(podaMod5, T) :-
+    gruposLibres(T, GL),
+    todosSonMultiplosDe5(GL).
 
-todosGruposLibresModulo5(T) :-
+gruposLibres(T, GL) :-
     coordenadasLibres(T, CL),
-    agruparCoordenadasLibres(CL).
+    agrupar(CL, GL).
 
-agruparCoordenadasLibres([]) :- true.
-agruparCoordenadasLibres(CL) :-
-    agrupar(CL, GL),
-    maplist(tamañoEsMod5, GL).
-
-tamañoEsMod5(G) :-
+todosSonMultiplosDe5([]).
+todosSonMultiplosDe5([G|R]) :-
     length(G, TG),
-    TG mod 5 =:= 0.
+    TG mod 5 =:= 0,
+    todosSonMultiplosDe5(R).
 
-coordenadasLibres(T, LC) :-
-    tamaño(T, CF, CC),
-    findall((F,C), (
-        between(1, CF, F),
-        between(1, CC, C),
-        esCeldaLibre(T, F, C)
-    ), LC).
-
-esCeldaLibre(T, F, C) :-
-    PF is F - 1,
-    nth0(PF, T, UF),
-
-    PC is C - 1,
-    nth0(PC, UF, U),
-    var(U).
+coordenadasLibres(T, CL) :-
+    findall((F, C),
+        (nth1(F, T, FA),
+         nth1(C, FA, UA),
+         var(UA)),
+        CL).
