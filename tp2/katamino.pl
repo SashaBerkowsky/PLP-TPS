@@ -59,9 +59,7 @@ obtenerCols(J, ANCHO, FS, FA) :-
 ubicarPieza(T, ID) :-
     pieza(ID, P), 
     tamaño(P, HP, WP),
-    tamaño(T, FILAS, COLS),
-    between(1, FILAS, I),
-    between(1, COLS, J),
+    coordenadas(T, (I, J)),
     espacioSuficiente(T, (I, J), HP, WP),
     seccionTablero(T, HP, WP, (I, J), S),
     colocarPieza(ID, P, S).
@@ -123,6 +121,7 @@ todosSonMultiplosDe5([G|R]) :-
     todosSonMultiplosDe5(R).
 
 coordenadasLibres(T, CL) :-
+    coordenadas(T, CL),
     findall((F, C),
         (nth1(F, T, FA),
          nth1(C, FA, UA),
