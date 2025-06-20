@@ -16,7 +16,7 @@
 % La lista [4,5] no aparece en ninguna instancia como sublista
 % Devuelve la solucion esperada: false
 % ***
-% Como en cada escenario el predicado sublista(-D, +T, +L, +R) instancia correctamente las variables D y T
+% Como en cada escenario el predicado sublista(-D, +T, +L, +R) instancia correctamente la variables D
 % sin caer en errores de instanciacion podemos afirmar que efectivamente es reversible
 
 % 1
