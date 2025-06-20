@@ -140,8 +140,9 @@ todosSonMultiplosDe5([G|R]) :-
     todosSonMultiplosDe5(R).
 
 coordenadasLibres(T, CL) :-
-    findall((F, C),
-        (nth1(F, T, FA),
-         nth1(C, FA, UA),
-         var(UA)),
+    findall((F, C), (
+        coordenadas(T, (F, C)),
+        nth1(F, T, FA),
+        nth1(C, FA, UA),
+        var(UA)),
         CL).
