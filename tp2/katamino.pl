@@ -1,5 +1,24 @@
 :- use_module(piezas).
 
+% 12
+% Repasamos si sublista puede ser usado como sublista(-D, +T, +L, +R)
+% Para esto analizamos casos en los que la funcion tiene una, multiples o ninguna solucion
+% Caso solucion unica: (ej. sublista(D, 2, [1,2,3,4,5], [2,3]))
+% La lista [2,3] de longitud 2 figura unica vez como sublista como resultado de descartar un elemento
+% En este caso el resultado es unico D = 1, No falla
+% ***
+% Caso multiples soluciones: (ej. sublista(D, 2, [1,2,3,2,3], [2,3]))
+% En este ejemplo la lista [2,3] de longitud 2 figura dos veces como sublista:
+% Una al eliminar 1 elemento y otra eliminando 2
+% Los resultados son: D = 1; D = 3. No falla
+% ***
+% Caso sin soluciones: (ej. sublista(D, 2, [1,2,3,2,3], [4,5]))
+% La lista [4,5] no aparece en ninguna instancia como sublista
+% Devuelve la solucion esperada: false
+% ***
+% Como en cada escenario el predicado sublista(-D, +T, +L, +R) instancia correctamente las variables D y T
+% sin caer en errores de instanciacion podemos afirmar que efectivamente es reversible
+
 % 1
 sublista(D,T,L,R) :- 
     length(PD, D),
